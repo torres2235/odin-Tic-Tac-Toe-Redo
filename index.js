@@ -57,7 +57,8 @@ function Cell() { //cell will be a factory since we need multiple
   return {addToken, getValue};
 }
 
-function displayController(playerOneName = "Player One", playerTwoName = "Player Two") {
+const gameLogic = (function(playerOneName = "Player One", playerTwoName = "Player Two") {
+    //tucking gameLogic to be a module so only one instance will be running
     const players = [
         {name: playerOneName, token: 'X'}, //player1 is X
         {name: playerTwoName, token: 'O'} //player2 is O
@@ -84,7 +85,7 @@ function displayController(playerOneName = "Player One", playerTwoName = "Player
 
         if(checkWin()) {
             gameBoard.printBoard();
-            return;
+            return false;
         };
         switchPlayerTurn();
         printNewRound();
@@ -118,6 +119,24 @@ function displayController(playerOneName = "Player One", playerTwoName = "Player
     printNewRound();
 
     return {playRound, getActivePlayer};
-}
+})();
 
-const play = displayController();
+
+const displayController = (function() {
+    //tucking gameLogic to be a module so only one instance will be running
+
+    let boardState = gameBoard.getBoard();
+
+    const board = document.createElement('div');
+    board.classList.add('board');
+    document.body.appendChild(board);
+
+    for(let i = 0; i < 3; i++) {
+        for(let j = 0; j < 3; j++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            board.appendChild(cell);
+        }
+    }
+
+})();
