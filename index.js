@@ -24,7 +24,7 @@ const gameBoard = (function() { //tucking gameBoard to be a module so only one i
                 board[space[0]][space[1]].addToken(player);
                 break;
             } else {
-                console.log('Invalid, choose another square.');
+                console.log('Invalid, choose another square.'); //if invalid, redo
                 space[0] = prompt("choose x: ");
                 space[1] = prompt("choose y: ");
             }
@@ -81,8 +81,37 @@ function displayController(playerOneName = "Player One", playerTwoName = "Player
         let y = prompt("choose y: ");
 
         gameBoard.fillSquare([x,y], getActivePlayer().token);
+
+        if(checkWin()) {
+            gameBoard.printBoard();
+            return;
+        };
         switchPlayerTurn();
         printNewRound();
+    };
+
+    const checkWin = () => {
+        let currentBoard = gameBoard.getBoard();
+        //console.log(currentBoard);
+
+        if(
+            //rows
+            (currentBoard[0][0].getValue() == getActivePlayer().token && currentBoard[0][1].getValue() == getActivePlayer().token && currentBoard[0][2].getValue() == getActivePlayer().token) 
+            || (currentBoard[1][0].getValue() == getActivePlayer().token && currentBoard[1][1].getValue() == getActivePlayer().token && currentBoard[1][2].getValue() == getActivePlayer().token) 
+            || (currentBoard[2][0].getValue() == getActivePlayer().token && currentBoard[2][1].getValue() == getActivePlayer().token && currentBoard[2][2].getValue() == getActivePlayer().token)
+            //columns 
+            || (currentBoard[0][0].getValue() == getActivePlayer().token && currentBoard[1][0].getValue() == getActivePlayer().token && currentBoard[2][0].getValue() == getActivePlayer().token) 
+            || (currentBoard[0][1].getValue() == getActivePlayer().token && currentBoard[1][1].getValue() == getActivePlayer().token && currentBoard[2][1].getValue() == getActivePlayer().token)
+            || (currentBoard[0][2].getValue() == getActivePlayer().token && currentBoard[1][2].getValue() == getActivePlayer().token && currentBoard[2][2].getValue() == getActivePlayer().token)
+            //diagnols 
+            || (currentBoard[0][0].getValue() == getActivePlayer().token && currentBoard[1][1].getValue() == getActivePlayer().token && currentBoard[2][2].getValue() == getActivePlayer().token)
+            || (currentBoard[0][2].getValue() == getActivePlayer().token && currentBoard[1][1].getValue() == getActivePlayer().token && currentBoard[2][0].getValue() == getActivePlayer().token)
+        ) {
+            console.log(`${getActivePlayer().name} wins!!`);
+            return true;
+        } else {
+            return false;
+        }
     };
 
     // Initial play game message
