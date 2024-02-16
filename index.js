@@ -25,8 +25,8 @@ const gameBoard = (function() { //tucking gameBoard to be a module so only one i
                 break;
             } else {
                 console.log('Invalid, choose another square.'); //if invalid, redo
-                space[0] = prompt("choose x: ");
-                space[1] = prompt("choose y: ");
+                //space[0] = prompt("choose x: ");
+                //space[1] = prompt("choose y: ");
             }
         }
         
@@ -77,9 +77,9 @@ const gameLogic = (function(playerOneName = "Player One", playerTwoName = "Playe
         console.log(`${getActivePlayer().name}'s turn.`);
     };
 
-    const playRound = () => {
-        let x = prompt("choose x: ");
-        let y = prompt("choose y: ");
+    const playRound = (x,y) => {
+        //let x = prompt("choose x: ");
+        //let y = prompt("choose y: ");
 
         gameBoard.fillSquare([x,y], getActivePlayer().token);
 
@@ -127,16 +127,30 @@ const displayController = (function() {
 
     let boardState = gameBoard.getBoard();
 
+    const prompt = document.createElement('div');
+    prompt.classList.add('prompt');
+    document.body.appendChild(prompt);
+    prompt.innerText = `${gameLogic.getActivePlayer().name}'s turn.`;
+
     const board = document.createElement('div');
     board.classList.add('board');
     document.body.appendChild(board);
+
+    
 
     for(let i = 0; i < 3; i++) {
         for(let j = 0; j < 3; j++) {
             const cell = document.createElement('div');
             cell.classList.add('cell');
             board.appendChild(cell);
+
+            cell.addEventListener('click', () => {
+                cell.innerText = gameLogic.getActivePlayer().token;
+                gameLogic.playRound(i,j);
+                prompt.innerText = `${gameLogic.getActivePlayer().name}'s turn.`;
+              });
         }
     }
+
 
 })();
